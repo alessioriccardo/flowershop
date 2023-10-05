@@ -42,8 +42,12 @@ public class FlowerShopService implements IFlowerShopService {
 
             if (!bundleForProduct.isEmpty()) {
 
+                bundleForProduct.sort(Comparator.comparing(Bundle::getProductQuantity).reversed());
+
                 //getting the minimun Set of Bundles needed to reach the given quantity of product required
-                List<Bundle> bundlesForProduct = findBestBundles(productQuantity, bundleForProduct, 0, new ArrayList<Bundle>());
+                //List<Bundle> bundlesForProduct = findBestBundles(productQuantity, bundleForProduct, 0, new ArrayList<Bundle>());
+
+                List<Bundle> bundlesForProduct = findBestBundles2(bundleForProduct, productQuantity, null, new ArrayList<Bundle>());
 
                 //Total Bundles of the Order mapped to BundleDto for the Controller
                 bundlesForOrder.addAll(bundlesForProduct.stream().map(b -> mapMundleToBundleDto(b)).collect(Collectors.toList()));
@@ -99,7 +103,7 @@ public class FlowerShopService implements IFlowerShopService {
     }
 
     /**
-     * Method that finds the minimun Set of Bundles needed to reach the given quantity of product required
+     * Method that finds the minimun Set of Bundles needed to reach the given quantity of product required using Dynamic Programming
      * @param quantity of the product we want to reach
      * @param bundlesForProduct the types of Bundles available for the product of the order
      * @param index the index in the List to process in each iteration
@@ -132,5 +136,43 @@ public class FlowerShopService implements IFlowerShopService {
             //Only one can bu null
             return resultIncludeList == null ? resultExcludeList : resultIncludeList;
         }
+    }
+
+
+    /**
+     * This is a recursive approach that finds the minimum List of Bundles only if bundlesForProduct are
+     *         ordered from the biggest Bundle to the smallest considering the ProductQuantity of each Bundle
+     * @param bundlesForProduct the types of Bundles available for the product of the order
+     * @param quantity of the product we want to reach
+     * @param currentBundle the current iteration Bundle
+     * @param tmpList utility List to store the previous results
+     * @return
+     */
+
+    private List<Bundle> findBestBundles2(List<Bundle> bundlesForProduct, Long quantity, Bundle currentBundle, List<Bundle> tmpList)
+    {
+        // if there are no coins
+        if (quantity == 0)
+            return tmpList;
+
+        if(currentBundle!=null) {
+            if (quantity < currentBundle.getProductQuantity()) {
+                return null;
+            }
+        }
+
+        // Trying every coin that has value less than given V
+        for (int i = 0; i < bundlesForProduct.size(); i++) {
+            Bundle bundle = bundlesForProduct.get(i);
+            if (bundle.getProductQuantity() <= quantity){
+                List<Bundle> result = findBestBundles2(bundlesForProduct, quantity-bundle.getProductQuantity(), currentBundle, tmpList);
+                if (result != null) {
+                    result.add(bundle);
+                    return result;
+                }
+            }
+
+        }
+        return null;
     }
 }
