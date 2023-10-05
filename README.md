@@ -12,9 +12,6 @@ Add a Multipart file as Body of the call linking the inputFile you want to proce
 ## Test 
 A Test class is included in the src/test/java folder.
 An input file is included in src/test/resource folder and has this syntax:
-10 R12
-15 L09
-13 T58
 
 ## License
 
