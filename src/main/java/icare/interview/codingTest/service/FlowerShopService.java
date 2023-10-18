@@ -45,9 +45,9 @@ public class FlowerShopService implements IFlowerShopService {
                 bundleForProduct.sort(Comparator.comparing(Bundle::getProductQuantity).reversed());
 
                 //getting the minimun Set of Bundles needed to reach the given quantity of product required
-                //List<Bundle> bundlesForProduct = findBestBundles(productQuantity, bundleForProduct, 0, new ArrayList<Bundle>());
+                List<Bundle> bundlesForProduct = findBestBundles(productQuantity, bundleForProduct, 0, new ArrayList<Bundle>());
 
-                List<Bundle> bundlesForProduct = findBestBundles2(bundleForProduct, productQuantity, null, new ArrayList<Bundle>());
+                //List<Bundle> bundlesForProduct = findBestBundles2(bundleForProduct, productQuantity, null, new ArrayList<Bundle>());
 
                 //Total Bundles of the Order mapped to BundleDto for the Controller
                 bundlesForOrder.addAll(bundlesForProduct.stream().map(b -> mapMundleToBundleDto(b)).collect(Collectors.toList()));
@@ -151,7 +151,7 @@ public class FlowerShopService implements IFlowerShopService {
 
     private List<Bundle> findBestBundles2(List<Bundle> bundlesForProduct, Long quantity, Bundle currentBundle, List<Bundle> tmpList)
     {
-        // if there are no coins
+        // if there are no item left
         if (quantity == 0)
             return tmpList;
 
@@ -161,7 +161,7 @@ public class FlowerShopService implements IFlowerShopService {
             }
         }
 
-        // Trying every coin that has value less than given V
+        // Trying every bundle that has quantity value less than given V
         for (int i = 0; i < bundlesForProduct.size(); i++) {
             Bundle bundle = bundlesForProduct.get(i);
             if (bundle.getProductQuantity() <= quantity){
