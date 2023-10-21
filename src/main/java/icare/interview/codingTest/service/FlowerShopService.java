@@ -45,9 +45,9 @@ public class FlowerShopService implements IFlowerShopService {
                 bundleForProduct.sort(Comparator.comparing(Bundle::getProductQuantity).reversed());
 
                 //getting the minimun Set of Bundles needed to reach the given quantity of product required
-                //List<Bundle> bundlesForProduct = findBestBundles(productQuantity, bundleForProduct, 0, new ArrayList<Bundle>());
+                List<Bundle> bundlesForProduct = findBestBundles(productQuantity, bundleForProduct, 0, new ArrayList<Bundle>());
 
-                List<Bundle> bundlesForProduct = findBestBundles2(bundleForProduct, productQuantity);
+                //List<Bundle> bundlesForProduct = findBestBundles2(bundleForProduct, productQuantity);
 
                 //Total Bundles of the Order mapped to BundleDto for the Controller
                 bundlesForOrder.addAll(bundlesForProduct.stream().map(b -> mapMundleToBundleDto(b)).collect(Collectors.toList()));
@@ -110,7 +110,7 @@ public class FlowerShopService implements IFlowerShopService {
      * @param tmpList utility List to store the previous results
      * @return
      */
-    private static List<Bundle> findBestBundles(Long quantity, List<Bundle> bundlesForProduct, int index,  List<Bundle> tmpList) {
+    private List<Bundle> findBestBundles(Long quantity, List<Bundle> bundlesForProduct, int index,  List<Bundle> tmpList) {
         if (quantity == 0) return tmpList;
 
         if (quantity < 0 || index >= bundlesForProduct.size()) return null;
@@ -133,7 +133,7 @@ public class FlowerShopService implements IFlowerShopService {
             return resultIncludeList.size() < resultExcludeList.size() ? resultIncludeList : resultExcludeList;
         }
         else {
-            //Only one can bu null
+            //Only one can be null
             return resultIncludeList == null ? resultExcludeList : resultIncludeList;
         }
     }
@@ -144,8 +144,6 @@ public class FlowerShopService implements IFlowerShopService {
      *         ordered from the biggest Bundle to the smallest considering the ProductQuantity of each Bundle
      * @param bundlesForProduct the types of Bundles available for the product of the order
      * @param quantity of the product we want to reach
-     * @param currentBundle the current iteration Bundle
-     * @param tmpList utility List to store the previous results
      * @return
      */
 
