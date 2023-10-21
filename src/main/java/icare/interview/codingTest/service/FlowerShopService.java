@@ -47,7 +47,7 @@ public class FlowerShopService implements IFlowerShopService {
                 //getting the minimun Set of Bundles needed to reach the given quantity of product required
                 //List<Bundle> bundlesForProduct = findBestBundles(productQuantity, bundleForProduct, 0, new ArrayList<Bundle>());
 
-                List<Bundle> bundlesForProduct = findBestBundles2(bundleForProduct, productQuantity, null, new ArrayList<Bundle>());
+                List<Bundle> bundlesForProduct = findBestBundles2(bundleForProduct, productQuantity);
 
                 //Total Bundles of the Order mapped to BundleDto for the Controller
                 bundlesForOrder.addAll(bundlesForProduct.stream().map(b -> mapMundleToBundleDto(b)).collect(Collectors.toList()));
@@ -149,23 +149,17 @@ public class FlowerShopService implements IFlowerShopService {
      * @return
      */
 
-    private List<Bundle> findBestBundles2(List<Bundle> bundlesForProduct, Long quantity, Bundle currentBundle, List<Bundle> tmpList)
+    private List<Bundle> findBestBundles2(List<Bundle> bundlesForProduct, Long quantity)
     {
         // if there are no item left
         if (quantity == 0)
-            return tmpList;
-
-        if(currentBundle!=null) {
-            if (quantity < currentBundle.getProductQuantity()) {
-                return null;
-            }
-        }
+            return new ArrayList<Bundle>();
 
         // Trying every bundle that has quantity value less than given V
         for (int i = 0; i < bundlesForProduct.size(); i++) {
             Bundle bundle = bundlesForProduct.get(i);
             if (bundle.getProductQuantity() <= quantity){
-                List<Bundle> result = findBestBundles2(bundlesForProduct, quantity-bundle.getProductQuantity(), bundle, tmpList);
+                List<Bundle> result = findBestBundles2(bundlesForProduct, quantity-bundle.getProductQuantity());
                 if (result != null) {
                     result.add(bundle);
                     return result;
