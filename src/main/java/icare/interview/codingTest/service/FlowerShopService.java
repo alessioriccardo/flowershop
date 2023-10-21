@@ -45,9 +45,9 @@ public class FlowerShopService implements IFlowerShopService {
                 bundleForProduct.sort(Comparator.comparing(Bundle::getProductQuantity).reversed());
 
                 //getting the minimun Set of Bundles needed to reach the given quantity of product required
-                List<Bundle> bundlesForProduct = findBestBundles(productQuantity, bundleForProduct, 0, new ArrayList<Bundle>());
+                //List<Bundle> bundlesForProduct = findBestBundles(productQuantity, bundleForProduct, 0, new ArrayList<Bundle>());
 
-                //List<Bundle> bundlesForProduct = findBestBundles2(bundleForProduct, productQuantity, null, new ArrayList<Bundle>());
+                List<Bundle> bundlesForProduct = findBestBundles2(bundleForProduct, productQuantity, null, new ArrayList<Bundle>());
 
                 //Total Bundles of the Order mapped to BundleDto for the Controller
                 bundlesForOrder.addAll(bundlesForProduct.stream().map(b -> mapMundleToBundleDto(b)).collect(Collectors.toList()));
@@ -165,7 +165,7 @@ public class FlowerShopService implements IFlowerShopService {
         for (int i = 0; i < bundlesForProduct.size(); i++) {
             Bundle bundle = bundlesForProduct.get(i);
             if (bundle.getProductQuantity() <= quantity){
-                List<Bundle> result = findBestBundles2(bundlesForProduct, quantity-bundle.getProductQuantity(), currentBundle, tmpList);
+                List<Bundle> result = findBestBundles2(bundlesForProduct, quantity-bundle.getProductQuantity(), bundle, tmpList);
                 if (result != null) {
                     result.add(bundle);
                     return result;
